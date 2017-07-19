@@ -41,7 +41,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
         this.inflater = inflater;
         MyDatabaseHelper itemsInCart = new MyDatabaseHelper(context);
         sqLiteDatabase = itemsInCart.getWritableDatabase();
-        FirebaseApp.initializeApp(context);
+//        FirebaseApp.initializeApp(context);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
@@ -73,10 +73,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
                                 int id = item.getItemId();
                                 switch (id){
                                     case R.id.add_to_cart:
-                                        DatabaseReference child = databaseReference.child("Name");
-                                        child.setValue("eipeks");
+                                        DatabaseReference child = databaseReference.child("Items");
 
-                                        Snackbar.make(v, "Done", Snackbar.LENGTH_SHORT)
+                                        DatabaseReference category = child.child(currentItem.getCategory());
+                                        DatabaseReference section = category.child(currentItem.getSection());
+                                        DatabaseReference name = section.child("Product Name");
+                                        name.setValue(currentItem.getName());
+
+                                        DatabaseReference dateReceived = section.child("Date Received");
+                                        dateReceived.setValue(currentItem.getDateReceived());
+
+                                        DatabaseReference size = section.child("Size");
+                                        size.setValue(currentItem.getSize());
+
+                                        Snackbar.make(v, "Done", Snackbar.LENGTH_LONG)
                                         .setAction("UND0", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
