@@ -33,7 +33,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
     private ArrayList<CorporateItem> corporateItems, cartItem;
     private LayoutInflater inflater;
     private SQLiteDatabase sqLiteDatabase;
-    private DatabaseReference databaseReference;
 
     public RecyclerAdapter(Context context, ArrayList<CorporateItem> corporateItems, LayoutInflater inflater){
         this.corporateItems = corporateItems;
@@ -42,8 +41,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
         MyDatabaseHelper itemsInCart = new MyDatabaseHelper(context);
         sqLiteDatabase = itemsInCart.getWritableDatabase();
 //        FirebaseApp.initializeApp(context);
-
-        databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -73,27 +70,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
                                 int id = item.getItemId();
                                 switch (id){
                                     case R.id.add_to_cart:
-                                        DatabaseReference child = databaseReference.child("Items");
-
-                                        DatabaseReference category = child.child(currentItem.getCategory());
-                                        DatabaseReference section = category.child(currentItem.getSection());
-                                        DatabaseReference name = section.child("Product Name");
-                                        name.setValue(currentItem.getName());
-
-                                        DatabaseReference dateReceived = section.child("Date Received");
-                                        dateReceived.setValue(currentItem.getDateReceived());
-
-                                        DatabaseReference size = section.child("Size");
-                                        size.setValue(currentItem.getSize());
-
-                                        Snackbar.make(v, "Done", Snackbar.LENGTH_LONG)
-                                        .setAction("UND0", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                            }
-                                        }).setActionTextColor(context.getResources().getColor(android.R.color.holo_red_light))
-                                        .show();
+                                        Snackbar.make(v, "Clicked", Snackbar.LENGTH_SHORT).show();
                                 }
                                 return false;
                             }

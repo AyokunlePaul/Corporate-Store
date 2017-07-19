@@ -69,6 +69,10 @@ public class Home extends AppCompatActivity
     ArrayList<String> colorsAvailable;
     ArrayList<CorporateItem> corporateItemsAvailable;
 
+    private DatabaseReference mainDatabase, corporateItems, categoryRef, sectionRef,
+            nameRef, dateReceivedRef, sizeRef,
+            quantityRef, colorRef, typeRef;
+
     String[] itemsTableColumnsToQuery = {
             MyDatabaseHelper.NAME_COLUMN, MyDatabaseHelper.COLOR_COLUMN, MyDatabaseHelper.CATEGORY_COLUMN,
             MyDatabaseHelper.PRICE_COLUMN, MyDatabaseHelper.QUANTITY_COLUMN, MyDatabaseHelper.SIZE_COLUMN,
@@ -86,7 +90,8 @@ public class Home extends AppCompatActivity
         setContentView(R.layout.home);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        FirebaseApp.initializeApp(this);
+//        FirebaseApp.initializeApp(this);
+        mainDatabase = FirebaseDatabase.getInstance().getReference();
 
         colorsAvailable = new ArrayList<>();
         corporateItemsAvailable = new ArrayList<>();
@@ -329,33 +334,62 @@ public class Home extends AppCompatActivity
                                         } else {
                                             dialog.dismiss();
 
-                                            CorporateItem newItem = new CorporateItem(
-                                                    categoryString, sectionString, productNameString,
-                                                    typeString, colorString, dateString,
-                                                    quantityString, sizeString, priceString);
+//                                            CorporateItem newItem = new CorporateItem(
+//                                                    categoryString, sectionString, productNameString,
+//                                                    typeString, colorString, dateString,
+//                                                    quantityString, sizeString, priceString);
 
-                                            ContentValues contentValues = new ContentValues();
-                                            contentValues.put(MyDatabaseHelper.NAME_COLUMN, productNameString);
-                                            contentValues.put(MyDatabaseHelper.COLOR_COLUMN, colorString);
-                                            contentValues.put(MyDatabaseHelper.QUANTITY_COLUMN, quantityString);
-                                            contentValues.put(MyDatabaseHelper.SIZE_COLUMN, sizeString);
-                                            contentValues.put(MyDatabaseHelper.PRICE_COLUMN, priceString);
-                                            contentValues.put(MyDatabaseHelper.CATEGORY_COLUMN, categoryString);
-                                            contentValues.put(MyDatabaseHelper.TYPE_COLUMN, typeString);
-                                            contentValues.put(MyDatabaseHelper.SECTION_COLUMN, sectionString);
-                                            contentValues.put(MyDatabaseHelper.DATE_RECEIVED, dateString);
+                                            corporateItems = mainDatabase.child("Corporate Items");
+                                            categoryRef = corporateItems.child(categoryString);
+                                            sectionRef = categoryRef.child(sectionString);
+                                            nameRef = sectionRef.child(productNameString);
 
-                                            sqLiteDatabase.insert(MyDatabaseHelper.TABLE_NAME, null, contentValues);
+                                            dateReceivedRef = nameRef.child("Date Received");
+                                            dateReceivedRef.setValue(dateString);
 
-                                            corporateItemsAvailable.add(newItem);
+                                            sizeRef = nameRef.child("Size");
+                                            sizeRef.setValue(sizeString);
 
-                                            if (!colorsAvailable.contains(colorString)){
-                                                ContentValues colorValue = new ContentValues();
-                                                colorValue.put(MyDatabaseHelper.COLOR_TABLE_COLUMN, colorString);
-                                                sqLiteDatabase.insert(MyDatabaseHelper.COLOR_TABLE_NAME, null, colorValue);
-                                            }
+                                            quantityRef = nameRef.child("Quantity");
+                                            quantityRef.setValue(quantityString);
 
-                                            Snackbar.make(v, "Done", Snackbar.LENGTH_SHORT).show();
+                                            colorRef = nameRef.child("Color");
+                                            colorRef.setValue(colorString);
+
+                                            typeRef = nameRef.child("Type");
+                                            typeRef.setValue(typeString);
+
+                                            Snackbar.make(v, "Done", Snackbar.LENGTH_LONG)
+                                                    .setAction("UND0", new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+
+                                                        }
+                                                    }).setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                                    .show();
+
+//                                            ContentValues contentValues = new ContentValues();
+//                                            contentValues.put(MyDatabaseHelper.NAME_COLUMN, productNameString);
+//                                            contentValues.put(MyDatabaseHelper.COLOR_COLUMN, colorString);
+//                                            contentValues.put(MyDatabaseHelper.QUANTITY_COLUMN, quantityString);
+//                                            contentValues.put(MyDatabaseHelper.SIZE_COLUMN, sizeString);
+//                                            contentValues.put(MyDatabaseHelper.PRICE_COLUMN, priceString);
+//                                            contentValues.put(MyDatabaseHelper.CATEGORY_COLUMN, categoryString);
+//                                            contentValues.put(MyDatabaseHelper.TYPE_COLUMN, typeString);
+//                                            contentValues.put(MyDatabaseHelper.SECTION_COLUMN, sectionString);
+//                                            contentValues.put(MyDatabaseHelper.DATE_RECEIVED, dateString);
+//
+//                                            sqLiteDatabase.insert(MyDatabaseHelper.TABLE_NAME, null, contentValues);
+//
+//                                            corporateItemsAvailable.add(newItem);
+//
+//                                            if (!colorsAvailable.contains(colorString)){
+//                                                ContentValues colorValue = new ContentValues();
+//                                                colorValue.put(MyDatabaseHelper.COLOR_TABLE_COLUMN, colorString);
+//                                                sqLiteDatabase.insert(MyDatabaseHelper.COLOR_TABLE_NAME, null, colorValue);
+//                                            }
+
+//                                            Snackbar.make(v, "Done", Snackbar.LENGTH_SHORT).show();
                                         }
 
                                     }
