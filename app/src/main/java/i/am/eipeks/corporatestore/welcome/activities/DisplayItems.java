@@ -144,6 +144,7 @@ public class DisplayItems extends AppCompatActivity {
         recyclerView.setAdapter(recyclerAdapter);
 
         corporateItemsCursor.close();
+
     }
 
     @Override
