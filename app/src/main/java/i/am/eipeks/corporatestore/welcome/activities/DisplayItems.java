@@ -17,6 +17,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 import i.am.eipeks.corporatestore.R;
@@ -40,6 +43,8 @@ public class DisplayItems extends AppCompatActivity {
     MyDatabaseHelper myDatabaseHelper;
     SQLiteDatabase sqLiteDatabase;
 
+    DatabaseReference mainDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,8 @@ public class DisplayItems extends AppCompatActivity {
 
         childClicked = getIntent().getIntExtra(Home.CHILD_CLICKED, 0);
         categoryClicked = getIntent().getExtras().getString(Home.CATEGORY_CLICKED);
+
+        mainDatabase = FirebaseDatabase.getInstance().getReference();
 
         switch (categoryClicked){
             case "Double":
@@ -95,9 +102,10 @@ public class DisplayItems extends AppCompatActivity {
         myDatabaseHelper = new MyDatabaseHelper(this);
         sqLiteDatabase = myDatabaseHelper.getWritableDatabase();
 
+//        DatabaseReference corporateItems = mainDatabase.child();
+        
         Cursor corporateItemsCursor = sqLiteDatabase.query(MyDatabaseHelper.TABLE_NAME, itemsTableColumnsToQuery,
                 null,null,null,null,null);
-
 
         if (corporateItemsCursor.moveToFirst()){
             do {
