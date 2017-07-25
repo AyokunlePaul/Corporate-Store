@@ -2,16 +2,22 @@ package i.am.eipeks.corporatestore.welcome.adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,7 +46,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
         this.inflater = inflater;
         MyDatabaseHelper itemsInCart = new MyDatabaseHelper(context);
         sqLiteDatabase = itemsInCart.getWritableDatabase();
-//        FirebaseApp.initializeApp(context);
     }
 
     @Override
@@ -70,6 +75,54 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
                                 int id = item.getItemId();
                                 switch (id){
                                     case R.id.add_to_cart:
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                        builder.setTitle(context.getResources().getString(R.string.price_hint));
+
+                                        View priceLayout = LayoutInflater.from(context)
+                                                .inflate(R.layout.price, null);
+                                        TextInputLayout inputLayout = (TextInputLayout) priceLayout.findViewById(R.id.price_text_input_layout);
+                                        inputLayout.setHint(context.getResources().getString(R.string.price_hint));
+
+                                        builder.setView(priceLayout);
+                                        builder.setPositiveButton("DONE", null);
+
+                                        final EditText editText = (EditText) priceLayout.findViewById(R.id.price_edit_text);
+
+                                        AlertDialog priceDialog = builder.create();
+                                        priceDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                            @Override
+                                            public void onShow(final DialogInterface dialogInterface) {
+                                                Button button = ((AlertDialog) dialogInterface).getButton(AlertDialog.BUTTON_POSITIVE);
+                                                button.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        if (TextUtils.isEmpty(editText.getText())){
+                                                            Snackbar.make(v, "Field is empty", Snackbar.LENGTH_LONG).show();
+                                                        } else {
+                                                            currentItem.setPrice(editText.getText().toString());
+                                                            ContentValues contentValues = new ContentValues();
+                                                            contentValues.put(MyDatabaseHelper.NAME_COLUMN, currentItem.getName());
+                                                            contentValues.put(MyDatabaseHelper.TYPE_COLUMN, currentItem.getType());
+                                                            contentValues.put(MyDatabaseHelper.SIZE_COLUMN, currentItem.getSize());
+                                                            contentValues.put(MyDatabaseHelper.COLOR_COLUMN, currentItem.getColor());
+                                                            contentValues.put(MyDatabaseHelper.PRICE_COLUMN, currentItem.getPrice());
+
+                                                            sqLiteDatabase.insert(MyDatabaseHelper.CART_TABLE_NAME, null, contentValues);
+
+                                                            Snackbar.make(v, "Done", Snackbar.LENGTH_LONG)
+                                                                    .setAction("UNDO", new View.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(View view) {
+//                                                                            sqLiteDatabase.delete(MyDatabaseHelper.T)
+                                                                        }
+                                                                    }).show();
+                                                            dialogInterface.dismiss();
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+
                                         Snackbar.make(v, "Clicked", Snackbar.LENGTH_SHORT).show();
                                 }
                                 return false;

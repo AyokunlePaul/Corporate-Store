@@ -19,8 +19,22 @@ public class CorporateItem {
         this.price = price;
     }
 
-    public void incrementQuantity(int quantity){
-        this.quantity = String.valueOf(Integer.parseInt(this.quantity) + quantity);
+    public CorporateItem(String category, String section, String name,
+                         String type, String color, String dateReceived,
+                         String quantity, String size){
+        this.category = category;
+        this.section = section;
+        this.name = name;
+        this.type = type;
+        this.color = color;
+        this.dateReceived = dateReceived;
+        this.quantity = quantity;
+        this.size = size;
+        this.price = "0.00";
+    }
+
+    public void incrementQuantity(int increment){
+
     }
 
     public String getCategory() {
@@ -58,4 +72,6 @@ public class CorporateItem {
     public String getPrice() {
         return price;
     }
+
+    public void setPrice(String price) {this.price = price;}
 }

@@ -283,6 +283,8 @@ public class Home extends AppCompatActivity
                 color = (AutoCompleteTextView) view.findViewById(R.id.color_edit_text);
                 color.setAdapter(colorAdapter);
 
+                dateTextView = (TextView) view.findViewById(R.id.date_received_text_view);
+
                 category = (Spinner) view.findViewById(R.id.category_spinner);
                 type = (Spinner) view.findViewById(R.id.type_spinner);
                 section = (Spinner) view.findViewById(R.id.section_spinner);
@@ -317,7 +319,7 @@ public class Home extends AppCompatActivity
                                         String colorString = color.getText().toString();
                                         String quantityString = quantity.getText().toString();
                                         String sizeString = size.getText().toString();
-                                        String priceString = price.getText().toString();
+//                                        String priceString = price.getText().toString();
 
                                         String categoryString = category.getSelectedItem().toString();
                                         String typeString = type.getSelectedItem().toString();
@@ -334,31 +336,10 @@ public class Home extends AppCompatActivity
                                         } else {
                                             dialog.dismiss();
 
-//                                            CorporateItem newItem = new CorporateItem(
-//                                                    categoryString, sectionString, productNameString,
-//                                                    typeString, colorString, dateString,
-//                                                    quantityString, sizeString, priceString);
-
-                                            corporateItems = mainDatabase.child("Corporate Items");
-                                            categoryRef = corporateItems.child(categoryString);
-                                            sectionRef = categoryRef.child(sectionString);
-                                            nameRef = sectionRef.child(productNameString);
-
-                                            dateReceivedRef = nameRef.child("Date Received");
-                                            dateReceivedRef.setValue(dateString);
-
-                                            sizeRef = nameRef.child("Size");
-                                            sizeRef.setValue(sizeString);
-
-                                            quantityRef = nameRef.child("Quantity");
-                                            quantityRef.setValue(quantityString);
-
-                                            colorRef = nameRef.child("Color");
-                                            colorRef.setValue(colorString);
-
-                                            typeRef = nameRef.child("Type");
-                                            typeRef.setValue(typeString);
-
+                                            CorporateItem newItem = new CorporateItem(
+                                                    categoryString, sectionString, productNameString,
+                                                    typeString, colorString, dateString,
+                                                    quantityString, sizeString);
                                             Snackbar.make(v, "Done", Snackbar.LENGTH_LONG)
                                                     .setAction("UND0", new View.OnClickListener() {
                                                         @Override
@@ -368,26 +349,26 @@ public class Home extends AppCompatActivity
                                                     }).setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                                                     .show();
 
-//                                            ContentValues contentValues = new ContentValues();
-//                                            contentValues.put(MyDatabaseHelper.NAME_COLUMN, productNameString);
-//                                            contentValues.put(MyDatabaseHelper.COLOR_COLUMN, colorString);
-//                                            contentValues.put(MyDatabaseHelper.QUANTITY_COLUMN, quantityString);
-//                                            contentValues.put(MyDatabaseHelper.SIZE_COLUMN, sizeString);
-//                                            contentValues.put(MyDatabaseHelper.PRICE_COLUMN, priceString);
-//                                            contentValues.put(MyDatabaseHelper.CATEGORY_COLUMN, categoryString);
-//                                            contentValues.put(MyDatabaseHelper.TYPE_COLUMN, typeString);
-//                                            contentValues.put(MyDatabaseHelper.SECTION_COLUMN, sectionString);
-//                                            contentValues.put(MyDatabaseHelper.DATE_RECEIVED, dateString);
-//
-//                                            sqLiteDatabase.insert(MyDatabaseHelper.TABLE_NAME, null, contentValues);
-//
-//                                            corporateItemsAvailable.add(newItem);
-//
-//                                            if (!colorsAvailable.contains(colorString)){
-//                                                ContentValues colorValue = new ContentValues();
-//                                                colorValue.put(MyDatabaseHelper.COLOR_TABLE_COLUMN, colorString);
-//                                                sqLiteDatabase.insert(MyDatabaseHelper.COLOR_TABLE_NAME, null, colorValue);
-//                                            }
+                                            ContentValues contentValues = new ContentValues();
+                                            contentValues.put(MyDatabaseHelper.NAME_COLUMN, productNameString);
+                                            contentValues.put(MyDatabaseHelper.COLOR_COLUMN, colorString);
+                                            contentValues.put(MyDatabaseHelper.QUANTITY_COLUMN, quantityString);
+                                            contentValues.put(MyDatabaseHelper.SIZE_COLUMN, sizeString);
+                                            contentValues.put(MyDatabaseHelper.PRICE_COLUMN, 0.00);
+                                            contentValues.put(MyDatabaseHelper.CATEGORY_COLUMN, categoryString);
+                                            contentValues.put(MyDatabaseHelper.TYPE_COLUMN, typeString);
+                                            contentValues.put(MyDatabaseHelper.SECTION_COLUMN, sectionString);
+                                            contentValues.put(MyDatabaseHelper.DATE_RECEIVED, dateString);
+
+                                            sqLiteDatabase.insert(MyDatabaseHelper.TABLE_NAME, null, contentValues);
+
+                                            corporateItemsAvailable.add(newItem);
+
+                                            if (!colorsAvailable.contains(colorString)){
+                                                ContentValues colorValue = new ContentValues();
+                                                colorValue.put(MyDatabaseHelper.COLOR_TABLE_COLUMN, colorString);
+                                                sqLiteDatabase.insert(MyDatabaseHelper.COLOR_TABLE_NAME, null, colorValue);
+                                            }
 
 //                                            Snackbar.make(v, "Done", Snackbar.LENGTH_SHORT).show();
                                         }

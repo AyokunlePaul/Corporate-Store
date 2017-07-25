@@ -307,26 +307,6 @@
                 android:layout_gravity="center_vertical"
                 style="@android:style/TextAppearance.DeviceDefault.Medium"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:textColorHint="@color/transparent_red"
-                android:id="@+id/price_text_input_layout">
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:padding="10dp"
-                    android:id="@+id/price_edit_text"
-                    android:theme="@style/EditText"
-                    android:hint="@string/price_hint"
-                    android:inputType="numberDecimal"
-                    android:textColorHint="@color/transparent_red"/>
-
-            </android.support.design.widget.TextInputLayout>
-
         </LinearLayout>
 
     </RelativeLayout>

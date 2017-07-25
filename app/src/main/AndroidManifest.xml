@@ -14,11 +14,13 @@
         android:name=".welcome.classes.CorporateStore">
 
         <activity android:name=".welcome.activities.Home">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".welcome.activities.DisplayItems">
 
@@ -29,6 +31,20 @@
 
         </activity>
 
+        <service android:name=".welcome.authenticator.AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator"/>
+        </service>
+
+        <provider
+            android:authorities="i.am.eipeks.corporatestore.welcome.authenticator"
+            android:name="i.am.eipeks.corporatestore.welcome.authenticator.StubProvider"
+            android:exported="false"
+            android:syncable="true"/>
+        
     </application>
 
 </manifest>

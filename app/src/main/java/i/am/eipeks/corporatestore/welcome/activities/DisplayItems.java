@@ -16,7 +16,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -39,6 +43,7 @@ public class DisplayItems extends AppCompatActivity {
     String categoryClicked = null, section = null;
 
     ArrayList<CorporateItem> corporateItemsAvailable, itemsToDisplay;
+    ArrayList<String> category, sectionsList, nameList;
 
     MyDatabaseHelper myDatabaseHelper;
     SQLiteDatabase sqLiteDatabase;
@@ -98,12 +103,21 @@ public class DisplayItems extends AppCompatActivity {
 
         corporateItemsAvailable = new ArrayList<>();
         itemsToDisplay = new ArrayList<>();
+        category = new ArrayList<>();
+        sectionsList = new ArrayList<>();
+        nameList = new ArrayList<>();
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(this, itemsToDisplay, getLayoutInflater());
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.addItemDecoration(new GridSpacing(3, dpToPx(10), true));
+        recyclerView.setAdapter(recyclerAdapter);
 
         myDatabaseHelper = new MyDatabaseHelper(this);
         sqLiteDatabase = myDatabaseHelper.getWritableDatabase();
 
-//        DatabaseReference corporateItems = mainDatabase.child();
-        
         Cursor corporateItemsCursor = sqLiteDatabase.query(MyDatabaseHelper.TABLE_NAME, itemsTableColumnsToQuery,
                 null,null,null,null,null);
 
@@ -134,17 +148,8 @@ public class DisplayItems extends AppCompatActivity {
                 }
             }
         }
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(this, itemsToDisplay, getLayoutInflater());
-
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.addItemDecoration(new GridSpacing(3, dpToPx(10), true));
-        recyclerView.setAdapter(recyclerAdapter);
-
         corporateItemsCursor.close();
-
+        recyclerAdapter.notifyDataSetChanged();
     }
 
     @Override
