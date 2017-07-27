@@ -111,7 +111,7 @@ public class DisplayItems extends AppCompatActivity {
 
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(this, itemsToDisplay, getLayoutInflater());
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         recyclerView.addItemDecoration(new GridSpacing(3, dpToPx(10), true));
         recyclerView.setAdapter(recyclerAdapter);
 

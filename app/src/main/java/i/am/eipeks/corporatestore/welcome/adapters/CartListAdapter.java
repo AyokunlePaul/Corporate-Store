@@ -10,15 +10,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import i.am.eipeks.corporatestore.R;
+import i.am.eipeks.corporatestore.welcome.activities.CartItems;
+import i.am.eipeks.corporatestore.welcome.classes.CartItemClass;
 import i.am.eipeks.corporatestore.welcome.classes.CorporateItem;
 
 
 public class CartListAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<CorporateItem> corporateItems;
+    private ArrayList<CartItemClass> corporateItems;
 
-    public CartListAdapter(Context context, ArrayList<CorporateItem> corporateItems){
+    public CartListAdapter(Context context, ArrayList<CartItemClass> corporateItems){
         this.context = context;
         this.corporateItems = corporateItems;
     }
@@ -29,7 +31,7 @@ public class CartListAdapter extends BaseAdapter {
     }
 
     @Override
-    public CorporateItem getItem(int position) {
+    public CartItemClass getItem(int position) {
         return corporateItems.get(position);
     }
 
@@ -41,7 +43,7 @@ public class CartListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        CorporateItem currentItem = corporateItems.get(position);
+        CartItemClass currentItem = corporateItems.get(position);
 
         if (convertView == null){
             LayoutInflater inflater = LayoutInflater.from(context);
@@ -53,12 +55,14 @@ public class CartListAdapter extends BaseAdapter {
         TextView size = (TextView) convertView.findViewById(R.id.cart_items_size);
         TextView type = (TextView) convertView.findViewById(R.id.cart_items_type);
         TextView color = (TextView) convertView.findViewById(R.id.cart_items_color);
+        TextView s_n = (TextView) convertView.findViewById(R.id.s_n);
 
         productName.setText(currentItem.getName());
         price.setText(currentItem.getPrice());
         size.setText(currentItem.getSize());
         type.setText(currentItem.getType());
         color.setText(currentItem.getColor());
+        s_n.setText(String.valueOf(position+1));
 
         return convertView;
     }

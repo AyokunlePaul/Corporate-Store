@@ -10,7 +10,8 @@
         android:layout_weight="2"
         android:text="@string/serial_number"
         android:padding="5dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:id="@+id/s_n"/>
 
     <View
         android:layout_width="2dp"
