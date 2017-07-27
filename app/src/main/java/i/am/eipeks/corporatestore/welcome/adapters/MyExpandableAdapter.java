@@ -19,6 +19,7 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
     private HashMap<String, List<String>> childrenTitles;
     private List<String> headerTitles;
+    private ImageView icon;
 
     public MyExpandableAdapter(Context context, HashMap<String, List<String>> childrenTitles, List<String> headerTitles){
         this.context = context;
@@ -71,7 +72,7 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
 
         String title = getGroup(groupPosition);
         TextView header = (TextView) convertView.findViewById(R.id.header);
-        ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
+        icon = (ImageView) convertView.findViewById(R.id.icon);
         header.setText(title);
 
         if (isExpanded){
@@ -81,6 +82,16 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
         }
 
         return convertView;
+    }
+
+    public void toggleIcon(String value){
+        switch (value){
+            case "up":
+                icon.setImageResource(R.drawable.ic_keyboard_arrow_up_48pt);
+                break;
+            case "down":
+                icon.setImageResource(R.drawable.ic_keyboard_arrow_down_48pt);
+        }
     }
 
     @Override

@@ -17,6 +17,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/cart_items_list"
-        android:layout_below="@+id/view"/>
+        android:layout_below="@+id/view"
+        android:layout_above="@+id/print_receipt"/>
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_print_48pt_3x"
+        android:scaleType="fitXY"
+        android:background="@null"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:id="@+id/print_receipt"
+        android:contentDescription="@string/app_name"/>
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package i.am.eipeks.corporatestore.welcome.activities;
 
+import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +14,11 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,14 +30,10 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +50,7 @@ import i.am.eipeks.corporatestore.welcome.database.MyDatabaseHelper;
 public class Home extends AppCompatActivity
         implements ExpandableListView.OnChildClickListener,
         View.OnClickListener,
-        DatePicker.OnDateChangedListener {
+        DatePicker.OnDateChangedListener, SearchView.OnQueryTextListener {
 
     AutoCompleteTextView color;
     EditText quantity, size, price, productName;
@@ -60,7 +61,7 @@ public class Home extends AppCompatActivity
 
     TextInputLayout quantityTextInputLayout,
             sizeTextInputLayout, productNameTextInputLayout,
-            colorTextInputLayout, priceTextInputLayout;
+            colorTextInputLayout;
 
     MyDatabaseHelper myDatabaseHelper;
     private SQLiteDatabase sqLiteDatabase;
@@ -68,10 +69,6 @@ public class Home extends AppCompatActivity
 
     ArrayList<String> colorsAvailable;
     ArrayList<CorporateItem> corporateItemsAvailable;
-
-    private DatabaseReference mainDatabase, corporateItems, categoryRef, sectionRef,
-            nameRef, dateReceivedRef, sizeRef,
-            quantityRef, colorRef, typeRef;
 
     String[] itemsTableColumnsToQuery = {
             MyDatabaseHelper.NAME_COLUMN, MyDatabaseHelper.COLOR_COLUMN, MyDatabaseHelper.CATEGORY_COLUMN,
@@ -91,7 +88,7 @@ public class Home extends AppCompatActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 //        FirebaseApp.initializeApp(this);
-        mainDatabase = FirebaseDatabase.getInstance().getReference();
+//        mainDatabase = FirebaseDatabase.getInstance().getReference();
 
         colorsAvailable = new ArrayList<>();
         corporateItemsAvailable = new ArrayList<>();
@@ -145,16 +142,24 @@ public class Home extends AppCompatActivity
         FloatingActionButton addNewItem = (FloatingActionButton) findViewById(R.id.add_new_good);
         addNewItem.setOnClickListener(this);
 
-        MyExpandableAdapter adapter = new MyExpandableAdapter(this, header, children);
+        final MyExpandableAdapter adapter = new MyExpandableAdapter(this, header, children);
         expandableListView.setAdapter(adapter);
         expandableListView.setOnChildClickListener(this);
         expandableListView.setOnGroupExpandListener(
                 new ExpandableListView.OnGroupExpandListener() {
                     @Override
                     public void onGroupExpand(int groupPosition) {
-                        RelativeLayout layout = (RelativeLayout) expandableListView.getChildAt(groupPosition);
-                        ImageView icon = (ImageView) layout.findViewById(R.id.icon);
-                        icon.setImageResource(R.drawable.ic_keyboard_arrow_up_48pt);
+                        for (int i = 0; i < adapter.getGroupCount(); i++){
+                            if (i != groupPosition){
+                                expandableListView.collapseGroup(i);
+                            }
+                        }
+//                        expandableListView.collapseGroup()
+//                        RelativeLayout layout = (RelativeLayout) expandableListView.getChildAt(groupPosition);
+//                        Log.i("Exception", Boolean.toString(layout == null));
+//                        ImageView icon = (ImageView) layout.findViewById(R.id.icon);
+//                        icon.setImageResource(R.drawable.ic_keyboard_arrow_up_48pt);
+                        adapter.toggleIcon("up");
                     }
                 });
         expandableListView.setOnGroupCollapseListener(
@@ -290,13 +295,13 @@ public class Home extends AppCompatActivity
                 section = (Spinner) view.findViewById(R.id.section_spinner);
 
                 quantityTextInputLayout = (TextInputLayout) view.findViewById(R.id.quantity_text_input_layout);
-                priceTextInputLayout = (TextInputLayout) view.findViewById(R.id.price_text_input_layout);
+//                priceTextInputLayout = (TextInputLayout) view.findViewById(R.id.price_text_input_layout);
                 productNameTextInputLayout = (TextInputLayout) view.findViewById(R.id.product_name_text_input_layout);
                 colorTextInputLayout = (TextInputLayout) view.findViewById(R.id.color_text_input_layout);
                 sizeTextInputLayout = (TextInputLayout) view.findViewById(R.id.size_text_input_layout);
 
                 quantityTextInputLayout.setHint(getResources().getString(R.string.quantity_hint));
-                priceTextInputLayout.setHint(getResources().getString(R.string.price_hint));
+//                priceTextInputLayout.setHint(getResources().getString(R.string.price_hint));
                 productNameTextInputLayout.setHint(getResources().getString(R.string.product_name));
                 colorTextInputLayout.setHint(getResources().getString(R.string.color_hint));
                 sizeTextInputLayout.setHint(getResources().getString(R.string.size_hint));
@@ -461,5 +466,40 @@ public class Home extends AppCompatActivity
         ArrayAdapter<CharSequence> typesAdapter = ArrayAdapter.createFromResource(this, R.array.types, R.layout.spinner_item);
         typesAdapter.setDropDownViewResource(R.layout.simple_spinner_drop_down);
         type.setAdapter(typesAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home_main, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.search:
+
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
     }
 }

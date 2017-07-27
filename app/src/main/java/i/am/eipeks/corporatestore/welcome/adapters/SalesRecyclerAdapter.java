@@ -3,7 +3,6 @@ package i.am.eipeks.corporatestore.welcome.adapters;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -22,10 +21,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 
 import i.am.eipeks.corporatestore.R;
@@ -33,36 +28,39 @@ import i.am.eipeks.corporatestore.welcome.classes.CorporateItem;
 import i.am.eipeks.corporatestore.welcome.database.MyDatabaseHelper;
 
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder> {
 
+public class SalesRecyclerAdapter extends RecyclerView.Adapter<SalesRecyclerAdapter.Holder> {
+
+    private ArrayList<CorporateItem> corporateItems;
     private Context context;
-    private ArrayList<CorporateItem> corporateItems, cartItem;
-    private LayoutInflater inflater;
-    private SQLiteDatabase sqLiteDatabase;
+    private SQLiteDatabase  sqLiteDatabase;
 
-    public RecyclerAdapter(Context context, ArrayList<CorporateItem> corporateItems, LayoutInflater inflater){
-        this.corporateItems = corporateItems;
+    public SalesRecyclerAdapter(Context context, ArrayList<CorporateItem> corporateItems){
         this.context = context;
-        this.inflater = inflater;
+        this.corporateItems = corporateItems;
         MyDatabaseHelper itemsInCart = new MyDatabaseHelper(context);
         sqLiteDatabase = itemsInCart.getWritableDatabase();
     }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CardView cardView = (CardView) inflater.inflate(R.layout.card_view_layout, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        CardView cardView = (CardView) inflater.inflate(R.layout.card_view_sales, parent, false);
         return new Holder(cardView);
     }
 
     @Override
-    public void onBindViewHolder(final Holder holder, final int position) {
+    public void onBindViewHolder(final Holder holder, int position) {
         final CorporateItem currentItem = corporateItems.get(position);
-        holder.productName.setText(String.format("%s: %s", "Name", currentItem.getName()));
-        holder.quantity.setText(String.format("%s: %s", "Quantity", currentItem.getQuantity()));
-        holder.size.setText(String.format("%s: %s", "Size", currentItem.getSize()));
-        holder.type.setText(String.format("%s: %s", "Type", currentItem.getType()));
-        holder.color.setText(String.format("%s: %s", "Color", currentItem.getColor()));
-        holder.dateReceived.setText(String.format("%s: %s", "Date", currentItem.getDateReceived()));
+
+        holder.category_section.setText(String.format("%s: %s", currentItem.getCategory(), currentItem.getSection()));
+        holder.productName.setText(currentItem.getName());
+        holder.type.setText(currentItem.getName());
+        holder.size.setText(currentItem.getName());
+        holder.quantity.setText(currentItem.getName());
+        holder.color.setText(currentItem.getName());
+        holder.dateReceived.setText(currentItem.getName());
+
         holder.popup.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -136,6 +134,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
                     }
                 }
         );
+
     }
 
     @Override
@@ -145,22 +144,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
 
     static class Holder extends RecyclerView.ViewHolder{
 
-        TextView productName, type, size, quantity, color, dateReceived;
+        TextView productName, type, size, quantity, color, dateReceived, category_section;
         ImageView icon;
         ImageButton popup;
 
-        private Holder(CardView itemView) {
+        public Holder(CardView itemView) {
             super(itemView);
-            productName = (TextView) itemView.findViewById(R.id.card_view_product_name);
-            type = (TextView) itemView.findViewById(R.id.card_view_type);
-            size = (TextView) itemView.findViewById(R.id.card_view_size);
-            quantity = (TextView) itemView.findViewById(R.id.card_view_quantity);
-            color = (TextView) itemView.findViewById(R.id.card_view_color);
-            dateReceived = (TextView) itemView.findViewById(R.id.card_view_date_received);
 
-            icon = (ImageView) itemView.findViewById(R.id.card_view_icon);
+            productName = (TextView) itemView.findViewById(R.id.sales_point_name);
+            type = (TextView) itemView.findViewById(R.id.sales_point_type);
+            size = (TextView) itemView.findViewById(R.id.sales_point_size);
+            quantity = (TextView) itemView.findViewById(R.id.sales_point_quantity);
+            color = (TextView) itemView.findViewById(R.id.sales_point_color);
+            dateReceived = (TextView) itemView.findViewById(R.id.sales_point_date_received);
+            category_section = (TextView) itemView.findViewById(R.id.category_and_section_display);
 
-            popup = (ImageButton) itemView.findViewById(R.id.popup_button);
+            icon = (ImageView) itemView.findViewById(R.id.sales_point_icon);
+
+            popup = (ImageButton) itemView.findViewById(R.id.sales_popup_button);
         }
     }
 

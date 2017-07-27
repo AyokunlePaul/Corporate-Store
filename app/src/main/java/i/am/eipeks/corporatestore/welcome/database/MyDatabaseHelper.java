@@ -18,7 +18,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     //Table Information
     public static final String TABLE_NAME = "GoodsTable";
-    private static final String ID = "_id";
+    public static final String ID = "_id";
     public static final String CATEGORY_COLUMN = "GoodsTable";
     public static final String SECTION_COLUMN = "Section";
     public static final String NAME_COLUMN = "Name";

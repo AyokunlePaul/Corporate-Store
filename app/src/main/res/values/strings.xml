@@ -19,6 +19,13 @@
     <string name="add_button_text">Add</string>
     <string name="section">Sections</string>
     <string name="serial_number">S/N</string>
+    <string name="search_hint">Search…</string>
+    <string name="search">Search</string>
+
+    <string-array name="login_as">
+        <item>Admin</item>
+        <item>Sales Manager</item>
+    </string-array>
 
     <string-array name="categories">
         <item>Single</item>

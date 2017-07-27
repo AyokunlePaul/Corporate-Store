@@ -5,4 +5,5 @@
     <color name="colorAccent">#f96661</color>
     <color name="ash">#aaaaaa</color>
     <color name="transparent_red">#f7bbbb</color>
+    <color name="white">@android:color/white</color>
 </resources>
